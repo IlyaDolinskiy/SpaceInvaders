@@ -6,7 +6,6 @@
 class Obstacle : public Destroyable
 {
 public:
-
   Obstacle();
   Obstacle(QVector2D && position);
   Obstacle(Obstacle const & obj);

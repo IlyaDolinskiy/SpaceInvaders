@@ -1,11 +1,11 @@
-#include "alien.hpp"
+#include "gun.hpp"
 
-Alien::Alien(QVector2D && position)
+Gun::Gun(QVector2D && position)
 {
   m_position = std::move(position);
 }
 
-Alien::Alien(Alien const & obj)
+Gun::Gun(Gun const & obj)
 {
   m_position = obj.m_position;
   m_size = obj.m_size;
@@ -19,7 +19,7 @@ Alien::Alien(Alien const & obj)
   RecalcVertices();
 }
 
-Alien::Alien(Alien && obj)
+Gun::Gun(Gun && obj)
 {
   std::swap(m_position, obj.m_position);
   std::swap(m_size, obj.m_size);
@@ -33,7 +33,7 @@ Alien::Alien(Alien && obj)
   RecalcVertices();
 }
 
-Alien & Alien::operator = (Alien && obj)
+Gun & Gun::operator = (Gun && obj)
 {
   std::swap(m_position, obj.m_position);
   std::swap(m_size, obj.m_size);
@@ -46,7 +46,7 @@ Alien & Alien::operator = (Alien && obj)
   return *this;
 }
 
-Alien & Alien::operator = (Alien const & obj)
+Gun & Gun::operator = (Gun const & obj)
 {
   if (this == &obj) return *this;
   m_position = obj.GetPosition();
@@ -60,7 +60,7 @@ Alien & Alien::operator = (Alien const & obj)
   return *this;
 }
 
-bool Alien::operator == (Alien const & obj) const
+bool Gun::operator == (Gun const & obj) const
 {
   return m_position == obj.m_position &&
          m_size == obj.m_size &&
