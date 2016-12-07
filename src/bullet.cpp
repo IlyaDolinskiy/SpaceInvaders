@@ -30,3 +30,21 @@ Bullet & Bullet::operator = (Bullet && obj)
   std::swap(m_direction, obj.m_direction);
   return *this;
 }
+
+Bullet & Bullet::operator = (Bullet const & obj)
+{
+  if (this == &obj) return *this;
+  m_position = obj.GetPosition();
+  m_size = obj.GetSize();
+  m_speed = obj.GetSpeed();
+  m_direction = obj.GetDirection();
+  return *this;
+}
+
+bool Bullet::operator == (Bullet const & obj) const
+{
+  return m_position == obj.m_position &&
+         m_size == obj.m_size &&
+         m_speed == obj.m_speed &&
+         m_direction == obj.m_direction;
+}
