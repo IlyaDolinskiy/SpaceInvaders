@@ -41,6 +41,8 @@ QVector2D const & GameEntity::GetVertex1() const { return m_vertex1; }
 QVector2D const & GameEntity::GetVertex2() const { return m_vertex2; }
 QVector2D const & GameEntity::GetVertex3() const { return m_vertex3; }
 QVector2D const & GameEntity::GetVertex4() const { return m_vertex4; }
+float const & GameEntity::GetX() const { return m_position.x(); }
+float const & GameEntity::GetY() const { return m_position.y(); }
 
 void GameEntity::SetPosition(QVector2D && position)
 {
@@ -50,6 +52,18 @@ void GameEntity::SetPosition(QVector2D && position)
 void GameEntity::SetSize(QSize && size)
 {
   m_size = std::move(size);
+  RecalcVertices();
+}
+
+void GameEntity::SetX(float const & x)
+{
+  m_position += QVector2D(x, 0);
+  RecalcVertices();
+}
+
+void GameEntity::SetY(float const & y)
+{
+  m_position += QVector2D(0, y);
   RecalcVertices();
 }
 
