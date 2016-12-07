@@ -5,7 +5,6 @@
 class Alien : public Shootable
 {
 public:
-
   Alien() = default;
   Alien(QVector2D && position);
 

@@ -7,7 +7,6 @@ Alien::Alien(QVector2D && position)
 }
 
 Alien::Alien(Alien const & obj)
-
 {
   m_position = obj.m_position;
   m_size = obj.m_size;

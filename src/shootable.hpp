@@ -3,7 +3,7 @@
 #include "destroyable.hpp"
 #include "bullet.hpp"
 
-class Shootable : Destroyable
+class Shootable : public Destroyable
 {
 public:
   Bullet Shot();
