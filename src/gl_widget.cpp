@@ -131,7 +131,15 @@ void GLWidget::Update(float elapsedSeconds)
         {
           bullet->SetIsActive(false);
           alien->SetIsActive(false);
-          std::cout << "Intersection!!!" << std::endl;
+        }
+      }
+
+      for (const auto & obstacle : m_obstacle)
+      {
+        if (bullet->Intersection(*(obstacle.get())))
+        {
+          bullet->SetIsActive(false);
+          obstacle->SetIsActive(false);
         }
       }
     }
@@ -146,6 +154,11 @@ void GLWidget::Update(float elapsedSeconds)
   m_alien.erase(std::remove_if(m_alien.begin(), m_alien.end(),
                                 [](std::shared_ptr<Alien> element) -> bool { return !element->GetIsActive(); }
                  ), m_alien.end()
+      );
+
+  m_obstacle.erase(std::remove_if(m_obstacle.begin(), m_obstacle.end(),
+                                [](std::shared_ptr<Obstacle> element) -> bool { return !element->GetIsActive(); }
+                 ), m_obstacle.end()
       );
 
 
