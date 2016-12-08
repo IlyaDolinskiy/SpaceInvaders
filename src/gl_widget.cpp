@@ -48,6 +48,7 @@ void GLWidget::initializeGL()
 
   m_textureAlien = new QOpenGLTexture(QImage("data/alien.png"));
   m_textureGun = new QOpenGLTexture(QImage("data/gun.png"));
+  m_textureObstacle = new QOpenGLTexture(QImage("data/obstacle.png"));
 
   m_time.start();
 }
@@ -113,10 +114,16 @@ void GLWidget::Render()
 {
   m_texturedRect->Render(m_textureGun, gun->GetPosition(), gun->GetSize(), m_screenSize);
 
-  for (const auto& it : m_alienArray)
+  for (const auto& it : m_alien)
   {
     m_texturedRect->Render(m_textureAlien, it->GetPosition(), it->GetSize(), m_screenSize);
   }
+
+  for (const auto& it : m_obstacle)
+  {
+    m_texturedRect->Render(m_textureObstacle, it->GetPosition(), it->GetSize(), m_screenSize);
+  }
+
 }
 
 void GLWidget::keyPressEvent(QKeyEvent * e)

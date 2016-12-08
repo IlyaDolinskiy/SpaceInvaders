@@ -46,6 +46,7 @@ private:
 
   QOpenGLTexture * m_textureAlien = nullptr;
   QOpenGLTexture * m_textureGun = nullptr;
+  QOpenGLTexture * m_textureObstacle = nullptr;
   TexturedRect * m_texturedRect = nullptr;
 
   QVector2D m_position = QVector2D(200, 200);

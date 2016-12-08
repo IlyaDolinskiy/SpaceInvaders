@@ -69,3 +69,6 @@ copy_files("${DATA_FILES_LIST}" ${CMAKE_CURRENT_BINARY_DIR})
 
 set(DATA_FILES_LIST data/gun.png)
 copy_files("${DATA_FILES_LIST}" ${CMAKE_CURRENT_BINARY_DIR})
+
+set(DATA_FILES_LIST data/obstacle.png)
+copy_files("${DATA_FILES_LIST}" ${CMAKE_CURRENT_BINARY_DIR})
