@@ -101,8 +101,8 @@ void GLWidget::paintGL()
 
 void GLWidget::resizeGL(int w, int h)
 {
-  m_screenSize.setWidth(m_width);
-  m_screenSize.setHeight(m_height);
+  m_screenSize.setWidth(w);
+  m_screenSize.setHeight(h);
 }
 
 void GLWidget::Update(float elapsedSeconds)
@@ -110,42 +110,60 @@ void GLWidget::Update(float elapsedSeconds)
   if (m_fire)
   {
       m_bullet.push_back(std::move(std::shared_ptr<Bullet>(new Bullet)));
-      m_bullet.back()->SetPosition(QVector2D(gun->GetPosition().x(), gun->GetPosition().y() + gun->GetSize().height() / 3.0));
-      m_bullet.back()->SetDirection(QVector2D(gun->GetShotDirection()));
-      m_bullet.back()->SetSize(QSize(10, 15));
+      m_bullet.back()->SetPosition(QVector2D(m_gun->GetPosition().x(), m_gun->GetPosition().y() + m_gun->GetSize().height() / 3.0));
+      m_bullet.back()->SetDirection(QVector2D(m_gun->GetShotDirection()));
+      m_bullet.back()->SetSize(QSize(5, 8));
       m_bullet.back()->SetSpeed(20);
       m_fire = false;
   }
 
-  for (const auto& it : m_bullet)
+  for (const auto & bullet : m_bullet)
   {
-    it->Update();
+    bullet->Update();
+    if (bullet->GetPosition().x() < 0 || bullet->GetPosition().y() < 0 || bullet->GetPosition().x() > m_width || bullet->GetPosition().y() > m_height)
+      bullet->SetIsActive(false);
+
+    if (bullet->GetIsActive())
+    {
+      for (const auto & alien : m_alien)
+      {
+        if (bullet->Intersection(*(alien.get())))
+        {
+          bullet->SetIsActive(false);
+          alien->SetIsActive(false);
+          std::cout << "Intersection!!!" << std::endl;
+        }
+      }
+    }
   }
 
-  if (m_directions[kLeftDirection] && (gun->GetPosition().x() - gun->GetSpeed() * elapsedSeconds > (gun->GetSize().width() / 2.0f + 1)))
-    gun->SetPosition(QVector2D(gun->GetPosition().x() - gun->GetSpeed() * elapsedSeconds, gun->GetPosition().y()));
-  if (m_directions[kRightDirection] && (gun->GetPosition().x() + gun->GetSpeed() * elapsedSeconds < (m_width - gun->GetSize().width() / 2.0f - 1)))
-    gun->SetPosition(QVector2D(gun->GetPosition().x() + gun->GetSpeed() * elapsedSeconds, gun->GetPosition().y()));
+
+  m_bullet.erase(std::remove_if(m_bullet.begin(), m_bullet.end(),
+                                [](std::shared_ptr<Bullet> element) -> bool { return !element->GetIsActive(); }
+                 ), m_bullet.end()
+      );
+
+  m_alien.erase(std::remove_if(m_alien.begin(), m_alien.end(),
+                                [](std::shared_ptr<Alien> element) -> bool { return !element->GetIsActive(); }
+                 ), m_alien.end()
+      );
+
+
+  if (m_directions[kLeftDirection] && (m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds > (m_gun->GetSize().width() / 2.0f + 1)))
+    m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));
+  if (m_directions[kRightDirection] && (m_gun->GetPosition().x() + m_gun->GetSpeed() * elapsedSeconds < (m_width - m_gun->GetSize().width() / 2.0f - 1)))
+    m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() + m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));
 }
 
 void GLWidget::Render()
 {
-  m_texturedRect->Render(m_textureGun, gun->GetPosition(), gun->GetSize(), m_screenSize);
-
-  for (const auto& it : m_alien)
-  {
-    m_texturedRect->Render(m_textureAlien, it->GetPosition(), it->GetSize(), m_screenSize);
-  }
-
-  for (const auto& it : m_obstacle)
-  {
+  for (const auto & it : m_obstacle)
     m_texturedRect->Render(m_textureObstacle, it->GetPosition(), it->GetSize(), m_screenSize);
-  }
-
-  for (const auto& it : m_bullet)
-  {
+  for (const auto & it : m_bullet)
     m_texturedRect->Render(m_textureBullet, it->GetPosition(), it->GetSize(), m_screenSize);
-  }
+  for (const auto & it : m_alien)
+    m_texturedRect->Render(m_textureAlien, it->GetPosition(), it->GetSize(), m_screenSize);
+  m_texturedRect->Render(m_textureGun, m_gun->GetPosition(), m_gun->GetSize(), m_screenSize);
 
 }
 
