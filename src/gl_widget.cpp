@@ -97,8 +97,8 @@ void GLWidget::paintGL()
 
 void GLWidget::resizeGL(int w, int h)
 {
-  m_screenSize.setWidth(w);
-  m_screenSize.setHeight(h);
+  m_screenSize.setWidth(m_width);
+  m_screenSize.setHeight(m_height);
 }
 
 void GLWidget::Update(float elapsedSeconds)
@@ -112,8 +112,10 @@ void GLWidget::Update(float elapsedSeconds)
 void GLWidget::Render()
 {
   m_texturedRect->Render(m_textureGun, gun->GetPosition(), gun->GetSize(), m_screenSize);
-  m_texturedRect->Render(m_textureAlien, QVector2D(400, 400), QSize(128, 128), m_screenSize);
-  m_texturedRect->Render(m_textureAlien, QVector2D(600, 600), QSize(128, 128), m_screenSize);
+  for (const auto& it : m_alienArray)
+  {
+    m_texturedRect->Render(m_textureAlien, it->GetPosition(), it->GetSize(), m_screenSize);
+  }
 }
 
 void GLWidget::keyPressEvent(QKeyEvent * e)
