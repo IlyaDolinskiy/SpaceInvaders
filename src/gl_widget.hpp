@@ -47,8 +47,10 @@ private:
   QOpenGLTexture * m_textureAlien = nullptr;
   QOpenGLTexture * m_textureGun = nullptr;
   QOpenGLTexture * m_textureObstacle = nullptr;
+  QOpenGLTexture * m_textureBullet = nullptr;
   TexturedRect * m_texturedRect = nullptr;
 
   QVector2D m_position = QVector2D(200, 200);
   std::array<bool, 2> m_directions = { {false, false} };
+  bool m_fire = false;
 };

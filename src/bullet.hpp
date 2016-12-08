@@ -13,6 +13,7 @@ public:
   Bullet & operator = (Bullet const & obj);
   bool operator == (Bullet const & obj) const;
 
+  void Update();
 private:
 
 };

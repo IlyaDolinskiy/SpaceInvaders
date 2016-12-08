@@ -48,3 +48,8 @@ bool Bullet::operator == (Bullet const & obj) const
          m_speed == obj.m_speed &&
          m_direction == obj.m_direction;
 }
+
+void Bullet::Update()
+{
+  m_position += QVector2D(m_speed * m_direction.x(), m_speed * m_direction.y());
+}

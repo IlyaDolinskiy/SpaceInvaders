@@ -35,6 +35,8 @@ GLWidget::~GLWidget()
   makeCurrent();
   delete m_textureAlien;
   delete m_textureGun;
+  delete m_textureObstacle;
+  delete m_textureBullet;
   delete m_texturedRect;
   doneCurrent();
 }
@@ -49,6 +51,7 @@ void GLWidget::initializeGL()
   m_textureAlien = new QOpenGLTexture(QImage("data/alien.png"));
   m_textureGun = new QOpenGLTexture(QImage("data/gun.png"));
   m_textureObstacle = new QOpenGLTexture(QImage("data/obstacle.png"));
+  m_textureBullet = new QOpenGLTexture(QImage("data/bullet.png"));
 
   m_time.start();
 }
@@ -104,6 +107,21 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::Update(float elapsedSeconds)
 {
+  if (m_fire)
+  {
+      m_bullet.push_back(std::move(std::shared_ptr<Bullet>(new Bullet)));
+      m_bullet.back()->SetPosition(QVector2D(gun->GetPosition().x(), gun->GetPosition().y() + gun->GetSize().height() / 3.0));
+      m_bullet.back()->SetDirection(QVector2D(gun->GetShotDirection()));
+      m_bullet.back()->SetSize(QSize(10, 15));
+      m_bullet.back()->SetSpeed(20);
+      m_fire = false;
+  }
+
+  for (const auto& it : m_bullet)
+  {
+    it->Update();
+  }
+
   if (m_directions[kLeftDirection] && (gun->GetPosition().x() - gun->GetSpeed() * elapsedSeconds > (gun->GetSize().width() / 2.0f + 1)))
     gun->SetPosition(QVector2D(gun->GetPosition().x() - gun->GetSpeed() * elapsedSeconds, gun->GetPosition().y()));
   if (m_directions[kRightDirection] && (gun->GetPosition().x() + gun->GetSpeed() * elapsedSeconds < (m_width - gun->GetSize().width() / 2.0f - 1)))
@@ -124,10 +142,18 @@ void GLWidget::Render()
     m_texturedRect->Render(m_textureObstacle, it->GetPosition(), it->GetSize(), m_screenSize);
   }
 
+  for (const auto& it : m_bullet)
+  {
+    m_texturedRect->Render(m_textureBullet, it->GetPosition(), it->GetSize(), m_screenSize);
+  }
+
 }
 
 void GLWidget::keyPressEvent(QKeyEvent * e)
-{
+{  
+  if (e->key() == Qt::Key_Space)
+    m_fire = true;
+
   if (e->key() == Qt::Key_Left)
     m_directions[kLeftDirection] = true;
   else if (e->key() == Qt::Key_Right)
@@ -136,6 +162,9 @@ void GLWidget::keyPressEvent(QKeyEvent * e)
 
 void GLWidget::keyReleaseEvent(QKeyEvent * e)
 {
+  if (e->key() == Qt::Key_Space)
+    m_fire = false;
+
   if (e->key() == Qt::Key_Left)
     m_directions[kLeftDirection] = false;
   else if (e->key() == Qt::Key_Right)
