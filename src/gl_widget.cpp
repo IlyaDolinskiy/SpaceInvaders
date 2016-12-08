@@ -103,15 +103,16 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::Update(float elapsedSeconds)
 {
-  if (m_directions[kLeftDirection] && ((gun->GetX() - gun->GetSpeed() * elapsedSeconds) > (gun->GetSize().width() / 2.0f)))
-    gun->SetX(gun->GetX() - gun->GetSpeed() * elapsedSeconds);
-  if (m_directions[kRightDirection] && ((gun->GetX() + gun->GetSpeed() * elapsedSeconds) < (m_width - gun->GetSize().width() / 2.0f)))
-    gun->SetX(gun->GetX() + gun->GetSpeed() * elapsedSeconds);
+  if (m_directions[kLeftDirection] && (gun->GetPosition().x() - gun->GetSpeed() * elapsedSeconds > (gun->GetSize().width() / 2.0f + 1)))
+    gun->SetPosition(QVector2D(gun->GetPosition().x() - gun->GetSpeed() * elapsedSeconds, gun->GetPosition().y()));
+  if (m_directions[kRightDirection] && (gun->GetPosition().x() + gun->GetSpeed() * elapsedSeconds < (m_width - gun->GetSize().width() / 2.0f - 1)))
+    gun->SetPosition(QVector2D(gun->GetPosition().x() + gun->GetSpeed() * elapsedSeconds, gun->GetPosition().y()));
 }
 
 void GLWidget::Render()
 {
   m_texturedRect->Render(m_textureGun, gun->GetPosition(), gun->GetSize(), m_screenSize);
+
   for (const auto& it : m_alienArray)
   {
     m_texturedRect->Render(m_textureAlien, it->GetPosition(), it->GetSize(), m_screenSize);

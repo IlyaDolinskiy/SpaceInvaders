@@ -19,13 +19,9 @@ public:
   QVector2D const & GetVertex2() const;
   QVector2D const & GetVertex3() const;
   QVector2D const & GetVertex4() const;
-  float const & GetX() const;
-  float const & GetY() const;
 
   void SetPosition(QVector2D && position);
   void SetSize(QSize && size);
-  void SetX(float const & x);
-  void SetY(float const & y);
 
   bool Intersection(GameEntity const & obj1, GameEntity const & obj2);
 

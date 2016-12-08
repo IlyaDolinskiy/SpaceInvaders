@@ -17,7 +17,7 @@ public:
   Space()
   {
     gun = std::shared_ptr<Gun>(new Gun);
-    gun->SetSpeed(2);
+    gun->SetSpeed(10);
     gun->SetPosition(QVector2D(m_width / 2.0f, gun->GetSize().height() / 2.0f));
 
     for(int i = 0; i < m_amountAlien; i++)
