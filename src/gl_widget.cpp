@@ -54,6 +54,7 @@ void GLWidget::initializeGL()
   m_textureBullet = new QOpenGLTexture(QImage("data/bullet.png"));
 
   m_time.start();
+  m_timeShot.start();
 }
 
 void GLWidget::paintGL()
@@ -109,9 +110,21 @@ void GLWidget::Update(float elapsedSeconds)
 {
   if (m_shot)
   {      
-    m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()), QVector2D(m_gun->GetShotDirection()), Shooter::Gun)));
+    m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()),
+                                             QVector2D(m_gun->GetShotDirection()),
+                                             Shooter::Gun)));
     m_shot = false;
   }
+
+  if (m_timeShot.elapsed() > 500)
+  {
+    int number = Random::Int(0,  m_alien.size()-1);
+    m_bullet.push_back(std::move(m_alien.at(number)->Shot(QVector2D(m_alien.at(number)->GetPosition()),
+                                                          QVector2D(m_alien.at(number)->GetShotDirection()),
+                                                          Shooter::Alien)));
+    m_timeShot.restart();
+  }
+
 
   for (const auto & bullet : m_bullet)
   {
@@ -121,12 +134,20 @@ void GLWidget::Update(float elapsedSeconds)
 
     if (bullet->GetIsActive())
     {
+      if (bullet->Intersection(*(m_gun.get())) && (bullet->GetShooter() == Shooter::Alien))
+      {
+        bullet->SetIsActive(false);
+        m_gun->Damage();
+        std::cout << "Damage Gun" << std::endl;
+      }
+
       for (const auto & alien : m_alien)
       {
-        if (bullet->Intersection(*(alien.get())))
+        if (bullet->Intersection(*(alien.get())) && (bullet->GetShooter() == Shooter::Gun))
         {
           bullet->SetIsActive(false);
           alien->Damage();
+          std::cout << "Damage Gun" << std::endl;
         }
       }
 
@@ -136,6 +157,7 @@ void GLWidget::Update(float elapsedSeconds)
         {
           bullet->SetIsActive(false);
           obstacle->Damage();
+          std::cout << "Damage Obstacle" << std::endl;
         }
       }
     }
@@ -157,6 +179,8 @@ void GLWidget::Update(float elapsedSeconds)
                  ), m_obstacle.end()
       );
 
+  if (!m_gun->GetIsActive())
+    std::cerr << "You died\nGame over" << std::endl;
 
   if (m_directions[kLeftDirection] && (m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds > (m_gun->GetSize().width() / 2.0f + 1)))
     m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));

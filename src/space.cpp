@@ -2,6 +2,8 @@
 
 Space::Space()
 {
+  srand (time(NULL));
+
   m_gun = std::shared_ptr<Gun>(new Gun);
   m_gun->SetSpeed(10);
   m_gun->SetSize(QSize(64, 32));
@@ -14,6 +16,7 @@ Space::Space()
     m_alien.back()->SetPosition(QVector2D(100*i + 50, 500));
     m_alien.back()->SetShotDirection(QVector2D(0, -1));
     m_alien.back()->SetSize(QSize(64, 64));
+    m_alien.back()->SetAmmo(10000);
   }
 
   for(int i = 0; i < m_amountObstacle; i++)
@@ -22,7 +25,6 @@ Space::Space()
     m_obstacle.back()->SetPosition(QVector2D(200*i + 60, 150));
     m_obstacle.back()->SetSize(QSize(100, 45));
   }
-
 }
 
 int const Space::GetWidth() const { return m_width; }
