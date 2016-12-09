@@ -109,7 +109,7 @@ void GLWidget::Update(float elapsedSeconds)
 {
   if (m_shot)
   {      
-    m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()), QVector2D(m_gun->GetShotDirection()))));
+    m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()), QVector2D(m_gun->GetShotDirection()), Shooter::Gun)));
     m_shot = false;
   }
 

@@ -2,6 +2,7 @@
 
 #include <QVector2D>
 #include <QSize>
+#include <iostream>
 
 class GameEntity
 {

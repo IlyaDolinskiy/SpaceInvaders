@@ -8,7 +8,7 @@
 class Shootable : public Destroyable
 {
 public:
-  std::shared_ptr<Bullet> Shot(QVector2D && position, QVector2D && direction);
+  std::shared_ptr<Bullet> Shot(QVector2D && position, QVector2D && direction, Shooter shooter);
 
   unsigned int const & GetAmmo() const;
   QVector2D const & GetShotDirection() const;

@@ -53,3 +53,6 @@ void Bullet::Update()
 {
   m_position += QVector2D(m_speed * m_direction.x(), m_speed * m_direction.y());
 }
+
+Shooter const & Bullet::GetShooter() const { return m_shooter; }
+void Bullet::SetShooter(Shooter const & shooter) { m_shooter = shooter; }
