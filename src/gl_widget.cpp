@@ -110,26 +110,18 @@ void GLWidget::Update(float elapsedSeconds)
 {
   if (m_shot)
   {      
-    m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()), QVector2D(m_gun->GetShotDirection()), Shooter::Gun)));
+    m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()),
+                                             QVector2D(m_gun->GetShotDirection()),
+                                             Shooter::Gun)));
     m_shot = false;
   }
 
   if (m_timeShot.elapsed() > 500)
   {
-
-//    std::cout << Random::Int(0,  m_alien.size()-1) << std::endl;
-//    for (const auto & alien : m_alien)
-    {
-//      m_bullet.push_back(std::move(alien->Shot(QVector2D(alien->GetPosition()), QVector2D(alien->GetShotDirection()), Shooter::Alien)));
-//      m_bullet.push_back(std::move(m_alien.at(Rand(0, static_cast<int>(m_alien.size())))->
-//                                   Shot(QVector2D(m_alien.at(Rand(0, static_cast<int>(m_alien.size())))->GetPosition()),
-//                                        QVector2D(m_alien.at(Rand(0, static_cast<int>(m_alien.size())))->GetShotDirection()),
-//                                        Shooter::Alien)));
-      m_bullet.push_back(std::move(m_alien.at(Random::Int(0,  m_alien.size()-1))->
-                                   Shot(QVector2D(m_alien.at(Random::Int(0,  m_alien.size()-1))->GetPosition()),
-                                        QVector2D(m_alien.at(Random::Int(0,  m_alien.size()-1))->GetShotDirection()),
-                                        Shooter::Alien)));
-    }
+    int number = Random::Int(0,  m_alien.size()-1);
+    m_bullet.push_back(std::move(m_alien.at(number)->Shot(QVector2D(m_alien.at(number)->GetPosition()),
+                                                          QVector2D(m_alien.at(number)->GetShotDirection()),
+                                                          Shooter::Alien)));
     m_timeShot.restart();
   }
 
