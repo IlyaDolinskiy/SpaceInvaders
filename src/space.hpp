@@ -4,13 +4,10 @@
 #include "alien.hpp"
 #include "obstacle.hpp"
 #include "bullet.hpp"
+#include "logger.hpp"
 
 #include <vector>
 #include <memory>
-
-//#include <random>
-//#include <chrono>
-//#include <iostream>
 
 class Space
 {
