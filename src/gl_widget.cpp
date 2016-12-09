@@ -130,7 +130,7 @@ void GLWidget::Update(float elapsedSeconds)
         if (bullet->Intersection(*(alien.get())))
         {
           bullet->SetIsActive(false);
-          alien->SetIsActive(false);
+          alien->Damage();
         }
       }
 
@@ -139,7 +139,7 @@ void GLWidget::Update(float elapsedSeconds)
         if (bullet->Intersection(*(obstacle.get())))
         {
           bullet->SetIsActive(false);
-          obstacle->SetIsActive(false);
+          obstacle->Damage();
         }
       }
     }
