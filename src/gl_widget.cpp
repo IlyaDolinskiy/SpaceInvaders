@@ -108,12 +108,7 @@ void GLWidget::resizeGL(int w, int h)
 void GLWidget::Update(float elapsedSeconds)
 {
   if (m_shot)
-  {
-      m_bullet.push_back(std::move(std::shared_ptr<Bullet>(new Bullet)));
-      m_bullet.back()->SetPosition(QVector2D(m_gun->GetPosition().x(), m_gun->GetPosition().y() + m_gun->GetSize().height() / 3.0));
-      m_bullet.back()->SetDirection(QVector2D(m_gun->GetShotDirection()));
-      m_bullet.back()->SetSize(QSize(5, 8));
-      m_bullet.back()->SetSpeed(20);
+  {      
       m_shot = false;
   }
 
