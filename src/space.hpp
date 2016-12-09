@@ -8,9 +8,7 @@
 #include <vector>
 #include <memory>
 
-#include <ctime>
 #include <random>
-#include <algorithm>
 #include <chrono>
 #include <iostream>
 
@@ -35,13 +33,15 @@ protected:
 };
 
 
+#include <ctime>
+
 class Random
 {
 public:
-  static int const Int(int x, int y)
+  static int const Int(int min, int max)
   {
-    std::random_device rseed;
-    std::mt19937 rgen(rseed());
-    return static_cast<int>(std::uniform_int_distribution<int>(x,y)(rgen));
+    srand(clock());
+    return min + rand() % (max - min + 1);
   }
 };
+
