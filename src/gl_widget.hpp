@@ -52,5 +52,5 @@ private:
 
   QVector2D m_position = QVector2D(200, 200);
   std::array<bool, 2> m_directions = { {false, false} };
-  bool m_fire = false;
+  bool m_shot = false;
 };

@@ -107,14 +107,14 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::Update(float elapsedSeconds)
 {
-  if (m_fire)
+  if (m_shot)
   {
       m_bullet.push_back(std::move(std::shared_ptr<Bullet>(new Bullet)));
       m_bullet.back()->SetPosition(QVector2D(m_gun->GetPosition().x(), m_gun->GetPosition().y() + m_gun->GetSize().height() / 3.0));
       m_bullet.back()->SetDirection(QVector2D(m_gun->GetShotDirection()));
       m_bullet.back()->SetSize(QSize(5, 8));
       m_bullet.back()->SetSpeed(20);
-      m_fire = false;
+      m_shot = false;
   }
 
   for (const auto & bullet : m_bullet)
@@ -183,7 +183,7 @@ void GLWidget::Render()
 void GLWidget::keyPressEvent(QKeyEvent * e)
 {  
   if (e->key() == Qt::Key_Space)
-    m_fire = true;
+    m_shot = true;
 
   if (e->key() == Qt::Key_Left)
     m_directions[kLeftDirection] = true;
@@ -194,7 +194,7 @@ void GLWidget::keyPressEvent(QKeyEvent * e)
 void GLWidget::keyReleaseEvent(QKeyEvent * e)
 {
   if (e->key() == Qt::Key_Space)
-    m_fire = false;
+    m_shot = false;
 
   if (e->key() == Qt::Key_Left)
     m_directions[kLeftDirection] = false;
