@@ -138,7 +138,7 @@ void GLWidget::Update(float elapsedSeconds)
       {
         bullet->SetIsActive(false);
         m_gun->Damage();
-        std::cout << "Damage Gun" << std::endl;
+        Log << LOG_DAMAGE << LOG_GUN;
       }
 
       for (const auto & alien : m_alien)
@@ -147,7 +147,7 @@ void GLWidget::Update(float elapsedSeconds)
         {
           bullet->SetIsActive(false);
           alien->Damage();
-          std::cout << "Damage Gun" << std::endl;
+          Log << LOG_DAMAGE << LOG_ALIEN;
         }
       }
 
@@ -157,12 +157,26 @@ void GLWidget::Update(float elapsedSeconds)
         {
           bullet->SetIsActive(false);
           obstacle->Damage();
-          std::cout << "Damage Obstacle" << std::endl;
+          Log << LOG_DAMAGE << LOG_OBSTACLE;
         }
       }
     }
   }
 
+  if (!m_gun->GetIsActive())
+  {
+    Log << LOG_DESTRUCTION << LOG_GUN;
+    Log << std::string("GameOver\n");
+    std::cout << "GameOver" << std::endl;
+  }
+
+  for (const auto & alien : m_alien)
+    if (!alien->GetIsActive())
+      Log << LOG_DESTRUCTION << LOG_ALIEN;
+
+  for (const auto & obstacle : m_obstacle)
+    if (!obstacle->GetIsActive())
+      Log << LOG_DESTRUCTION << LOG_OBSTACLE;
 
   m_bullet.erase(std::remove_if(m_bullet.begin(), m_bullet.end(),
                                 [](std::shared_ptr<Bullet> element) -> bool { return !element->GetIsActive(); }
@@ -178,9 +192,6 @@ void GLWidget::Update(float elapsedSeconds)
                                 [](std::shared_ptr<Obstacle> element) -> bool { return !element->GetIsActive(); }
                  ), m_obstacle.end()
       );
-
-  if (!m_gun->GetIsActive())
-    std::cerr << "You died\nGame over" << std::endl;
 
   if (m_directions[kLeftDirection] && (m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds > (m_gun->GetSize().width() / 2.0f + 1)))
     m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));

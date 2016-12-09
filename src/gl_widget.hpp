@@ -6,8 +6,7 @@
 #include "textured_rect.hpp"
 
 #include "space.hpp"
-#include "gun.hpp"
-
+#include "logger.hpp"
 #include <array>
 
 class MainWindow;
