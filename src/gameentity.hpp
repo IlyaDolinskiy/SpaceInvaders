@@ -1,5 +1,7 @@
 #pragma once
 
+#include "factory.hpp"
+
 #include <QVector2D>
 #include <QSize>
 #include <iostream>

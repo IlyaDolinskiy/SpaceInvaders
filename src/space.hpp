@@ -5,6 +5,7 @@
 #include "obstacle.hpp"
 #include "bullet.hpp"
 #include "logger.hpp"
+#include "factory.hpp"
 
 #include <vector>
 #include <memory>

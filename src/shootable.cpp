@@ -6,7 +6,8 @@ std::shared_ptr<Bullet> Shootable::Shot(QVector2D && position, QVector2D && dire
   {
     if (m_ammo == 0) throw std::invalid_argument("Ammo run out\n");
     m_ammo--;
-    std::shared_ptr<Bullet> bullet(new Bullet);
+//    std::shared_ptr<Bullet> bullet(new Bullet);
+    std::shared_ptr<Bullet> bullet = factory.Create<Bullet>();
     bullet->SetPosition(std::move(position));
     bullet->SetDirection(std::move(direction));
     bullet->SetSize(QSize(5, 8));
