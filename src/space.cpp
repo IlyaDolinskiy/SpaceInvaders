@@ -11,7 +11,7 @@ Space::Space()
   for(int i = 0; i < m_amountAlien; i++)
   {
     m_alien.push_back(std::move(std::shared_ptr<Alien>(new Alien)));
-    m_alien.back()->SetPosition(QVector2D(100*i + 50, 600));
+    m_alien.back()->SetPosition(QVector2D(100*i + 50, 500));
     m_alien.back()->SetShotDirection(QVector2D(0, -1));
     m_alien.back()->SetSize(QSize(64, 64));
   }

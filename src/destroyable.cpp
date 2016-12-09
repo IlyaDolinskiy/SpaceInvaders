@@ -5,7 +5,10 @@ void Destroyable::Damage()
   if (m_health - m_damage > 0)
     m_health -= m_damage;
   else
+  {
     m_health = 0;
+    m_isActive = false;
+  }
 }
 
 float const & Destroyable::GetHealth() const { return m_health; }

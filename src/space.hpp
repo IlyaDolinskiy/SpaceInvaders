@@ -18,7 +18,7 @@ public:
 
 protected:
   int m_width = 512;
-  int m_height = 768;
+  int m_height = 600;
 
   int m_amountAlien = 5;
   int m_amountObstacle = 3;
