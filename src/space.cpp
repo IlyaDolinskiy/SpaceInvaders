@@ -15,7 +15,7 @@ void Space::GunCreate()
 {
   m_gun = factory.Create<Gun>();
   m_gun->SetSpeed(10);
-  m_gun->SetHealth(10);
+  m_gun->SetHealth(5);
   m_gun->SetAmmo(120);
   m_gun->SetSize(QSize(64, 32));
   m_gun->SetShotDirection(QVector2D(0, 1));
