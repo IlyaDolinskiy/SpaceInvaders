@@ -55,6 +55,7 @@ void GLWidget::initializeGL()
 
   m_time.start();
   m_timeShot.start();
+  m_timeMove.start();
 }
 
 void GLWidget::paintGL()
@@ -107,12 +108,12 @@ void GLWidget::paintGL()
       switch(m_status)
       {
         case Status::Lose:
-          painter.drawText(m_width / 2, m_height / 2, "Game Over");
-          painter.drawText(m_width / 2, m_height / 2 + 20, "You Lose");
+          painter.drawText(m_width / 2, m_height / 2, "Game Over!");
+          painter.drawText(m_width / 2, m_height / 2 + 20, "You Lose!");
           break;
         case Status::Win:
-          painter.drawText(m_width / 2, m_height / 2, "Game Over");
-          painter.drawText(m_width / 2, m_height / 2 + 20, "You Win");
+          painter.drawText(m_width / 2, m_height / 2, "Game Over!");
+          painter.drawText(m_width / 2, m_height / 2 + 20, "You Win!");
           break;
       }
     }
@@ -155,9 +156,19 @@ void GLWidget::Update(float elapsedSeconds)
       m_timeShot.restart();
     }
 
+    if (m_alien.at(0)->GetPosition().y() > m_height / 2)
+    {
+      for (const auto & alien : m_alien)
+      {
+        alien->Move(elapsedSeconds);
+      }
+      m_timeMove.restart();
+    }
+
+
     for (const auto & bullet : m_bullet)
     {
-      bullet->Update();
+      bullet->Update(elapsedSeconds);
       if (bullet->GetPosition().x() < 0 || bullet->GetPosition().y() < 0 || bullet->GetPosition().x() > m_width || bullet->GetPosition().y() > m_height)
         bullet->SetIsActive(false);
 

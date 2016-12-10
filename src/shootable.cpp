@@ -10,7 +10,7 @@ std::shared_ptr<Bullet> Shootable::Shot(QVector2D && position, QVector2D && dire
     bullet->SetPosition(std::move(position));
     bullet->SetDirection(std::move(direction));
     bullet->SetSize(QSize(5, 8));
-    bullet->SetSpeed(10);
+    bullet->SetSpeed(15);
     bullet->SetShooter(Shooter(shooter));
     return bullet;
   }

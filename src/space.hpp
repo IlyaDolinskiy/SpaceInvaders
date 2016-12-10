@@ -18,6 +18,10 @@ public:
   Space();
   int const GetWidth() const;
   int const GetHeight() const;
+  void GunCreate();
+  void AlienCreate();
+  void ObstacleCreate();
+  void ClearLogFile();
 
 protected:
   int m_width = 512;

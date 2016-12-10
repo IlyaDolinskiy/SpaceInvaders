@@ -39,7 +39,8 @@ private:
   MainWindow * m_mainWindow;
 
   unsigned int m_frames = 0;
-  QTime m_timeShot;
+  QTime m_timeShot;  
+  QTime m_timeMove;
   QTime m_time;
   QColor m_background;
   QSize m_screenSize;

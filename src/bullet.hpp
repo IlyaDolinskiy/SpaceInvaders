@@ -15,7 +15,7 @@ public:
   Bullet & operator = (Bullet const & obj);
   bool operator == (Bullet const & obj) const;
 
-  void Update();
+  void Update(float elapsedSeconds);
   Shooter const & GetShooter() const;
   void SetShooter(Shooter const & shooter);
 private:  

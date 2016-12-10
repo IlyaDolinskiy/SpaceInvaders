@@ -1,8 +1,8 @@
 #include "moveable.hpp"
 
-void Moveable::Move()
+void Moveable::Move(float elapsedSeconds)
 {
-  m_position += QVector2D(m_speed*m_direction.x(), m_speed*m_direction.y());
+  m_position += QVector2D(m_speed*elapsedSeconds*m_direction.x(), m_speed*elapsedSeconds*m_direction.y());
 }
 
 float const & Moveable::GetSpeed() const { return m_speed; }
