@@ -15,8 +15,6 @@ Alien::Alien(Alien const & obj)
   m_damage = obj.m_damage;
   m_ammo = obj.m_ammo;
   m_shotDirection = obj.m_shotDirection;
-
-  RecalcVertices();
 }
 
 Alien::Alien(Alien && obj)
@@ -29,8 +27,6 @@ Alien::Alien(Alien && obj)
   std::swap(m_damage, obj.m_damage);
   std::swap(m_ammo, obj.m_ammo);
   std::swap(m_shotDirection, obj.m_shotDirection);
-
-  RecalcVertices();
 }
 
 Alien & Alien::operator = (Alien && obj)

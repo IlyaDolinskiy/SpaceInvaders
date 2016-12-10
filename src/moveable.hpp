@@ -6,7 +6,7 @@
 class Moveable : public GameEntity
 {
 public:
-  void Move();
+  void Move(float elapsedSeconds);
 
   float const & GetSpeed() const;
   QVector2D const & GetDirection() const;

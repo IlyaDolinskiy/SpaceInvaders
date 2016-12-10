@@ -2,6 +2,8 @@
 
 #include "moveable.hpp"
 
+enum class Shooter { Gun, Alien };
+
 class Bullet : public Moveable
 {
 public:
@@ -13,6 +15,9 @@ public:
   Bullet & operator = (Bullet const & obj);
   bool operator == (Bullet const & obj) const;
 
-private:
-
+  void Update(float elapsedSeconds);
+  Shooter const & GetShooter() const;
+  void SetShooter(Shooter const & shooter);
+private:  
+  Shooter m_shooter = Shooter::Gun;
 };

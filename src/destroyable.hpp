@@ -14,6 +14,6 @@ public:
   void SetDamage(float const & damage);
 
 protected:
-  float m_health = 100.0f;
-  float m_damage = 10.0f;
+  float m_health = 5.0f;
+  float m_damage = 1.0f;
 };
