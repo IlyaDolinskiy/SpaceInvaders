@@ -110,10 +110,12 @@ void GLWidget::paintGL()
         case Status::Lose:
           painter.drawText(m_width / 2, m_height / 2, "Game Over!");
           painter.drawText(m_width / 2, m_height / 2 + 20, "You Lose!");
+          painter.drawText(m_width / 2, m_height / 2 + 30, "Score: " + QString::number(m_score));
           break;
         case Status::Win:
           painter.drawText(m_width / 2, m_height / 2, "Game Over!");
           painter.drawText(m_width / 2, m_height / 2 + 20, "You Win!");
+          painter.drawText(m_width / 2, m_height / 2 + 30, "Score: " + QString::number(m_score));
           break;
       }
     }
@@ -236,6 +238,7 @@ void GLWidget::Update(float elapsedSeconds)
 
   else
   {
+    m_score = 10 * (m_gun->GetAmmo() + m_gun->GetHealth()) / (m_alien.size()+1);
     m_gameIsActive = false;
     if (!m_gun->GetIsActive() || m_gun->GetAmmo() == 0)
     {

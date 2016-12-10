@@ -33,6 +33,8 @@ protected:
   bool m_gameIsActive = true;
   Status m_status = Status::Lose;
 
+  int m_score = 0;
+
   std::shared_ptr<Gun> m_gun;
   std::vector<std::shared_ptr<Alien>> m_alien;
   std::vector<std::shared_ptr<Bullet>> m_bullet;
