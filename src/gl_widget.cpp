@@ -87,7 +87,35 @@ void GLWidget::paintGL()
     QString framesPerSecond;
     framesPerSecond.setNum(m_frames / (elapsed / 1000.0), 'f', 2);
     painter.setPen(Qt::white);
-    painter.drawText(20, 40, framesPerSecond + " fps");
+    painter.drawText(20, 20, framesPerSecond + " fps");
+    painter.drawText(20, 40,  "health: " + QString::number(m_gun->GetHealth()));
+    painter.drawText(20, 50,  "ammo: " + QString::number(m_gun->GetAmmo()));
+    for (const auto & alien : m_alien)
+    {
+      painter.drawText(alien->GetPosition().x() - alien->GetSize().width() / 4,
+                       m_height - (alien->GetPosition().y() + alien->GetSize().height() / 2),
+                       "health: " + QString::number(alien->GetHealth()));
+    }
+    for (const auto & obstacle : m_obstacle)
+    {
+      painter.drawText(obstacle->GetPosition().x() - obstacle->GetSize().width() / 4,
+                       m_height - (obstacle->GetPosition().y() + obstacle->GetSize().height()/2),
+                       "health: " + QString::number(obstacle->GetHealth()));
+    }
+    if (!m_gameIsActive)
+    {
+      switch(m_status)
+      {
+        case Status::Lose:
+          painter.drawText(m_width / 2, m_height / 2, "Game Over");
+          painter.drawText(m_width / 2, m_height / 2 + 20, "You Lose");
+          break;
+        case Status::Win:
+          painter.drawText(m_width / 2, m_height / 2, "Game Over");
+          painter.drawText(m_width / 2, m_height / 2 + 20, "You Win");
+          break;
+      }
+    }
   }
   painter.end();
 
@@ -108,95 +136,109 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::Update(float elapsedSeconds)
 {
-  if (m_shot)
-  {      
-    m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()),
-                                             QVector2D(m_gun->GetShotDirection()),
-                                             Shooter::Gun)));
-    m_shot = false;
-  }
-
-  if (m_timeShot.elapsed() > 500)
+  if (!(!m_gun->GetIsActive() || m_gun->GetAmmo() == 0 || m_alien.size() == 0))
   {
-    int number = Random::Int(0,  m_alien.size()-1);
-    m_bullet.push_back(std::move(m_alien.at(number)->Shot(QVector2D(m_alien.at(number)->GetPosition()),
-                                                          QVector2D(m_alien.at(number)->GetShotDirection()),
-                                                          Shooter::Alien)));
-    m_timeShot.restart();
-  }
-
-
-  for (const auto & bullet : m_bullet)
-  {
-    bullet->Update();
-    if (bullet->GetPosition().x() < 0 || bullet->GetPosition().y() < 0 || bullet->GetPosition().x() > m_width || bullet->GetPosition().y() > m_height)
-      bullet->SetIsActive(false);
-
-    if (bullet->GetIsActive())
+    if (m_shot)
     {
-      if (bullet->Intersection(*(m_gun.get())) && (bullet->GetShooter() == Shooter::Alien))
-      {
+      m_bullet.push_back(std::move(m_gun->Shot(QVector2D(m_gun->GetPosition()),
+                                               QVector2D(m_gun->GetShotDirection()),
+                                               Shooter::Gun)));
+      m_shot = false;
+    }
+
+    if (m_timeShot.elapsed() > 500)
+    {
+      int number = Random::Int(0,  m_alien.size()-1);
+      m_bullet.push_back(std::move(m_alien.at(number)->Shot(QVector2D(m_alien.at(number)->GetPosition()),
+                                                            QVector2D(m_alien.at(number)->GetShotDirection()),
+                                                            Shooter::Alien)));
+      m_timeShot.restart();
+    }
+
+    for (const auto & bullet : m_bullet)
+    {
+      bullet->Update();
+      if (bullet->GetPosition().x() < 0 || bullet->GetPosition().y() < 0 || bullet->GetPosition().x() > m_width || bullet->GetPosition().y() > m_height)
         bullet->SetIsActive(false);
-        m_gun->Damage();
-        Log << LOG_DAMAGE << LOG_GUN;
-      }
 
-      for (const auto & alien : m_alien)
+      if (bullet->GetIsActive())
       {
-        if (bullet->Intersection(*(alien.get())) && (bullet->GetShooter() == Shooter::Gun))
+        if (bullet->Intersection(*(m_gun.get())) && (bullet->GetShooter() == Shooter::Alien))
         {
           bullet->SetIsActive(false);
-          alien->Damage();
-          Log << LOG_DAMAGE << LOG_ALIEN;
+          m_gun->Damage();
+          Log << LOG_DAMAGE << LOG_GUN;
         }
-      }
 
-      for (const auto & obstacle : m_obstacle)
-      {
-        if (bullet->Intersection(*(obstacle.get())))
+        for (const auto & alien : m_alien)
         {
-          bullet->SetIsActive(false);
-          obstacle->Damage();
-          Log << LOG_DAMAGE << LOG_OBSTACLE;
+          if (bullet->Intersection(*(alien.get())) && (bullet->GetShooter() == Shooter::Gun))
+          {
+            bullet->SetIsActive(false);
+            alien->Damage();
+            Log << LOG_DAMAGE << LOG_ALIEN;
+          }
+        }
+
+        for (const auto & obstacle : m_obstacle)
+        {
+          if (bullet->Intersection(*(obstacle.get())))
+          {
+            bullet->SetIsActive(false);
+            obstacle->Damage();
+            Log << LOG_DAMAGE << LOG_OBSTACLE;
+          }
         }
       }
     }
-  }
 
-  if (!m_gun->GetIsActive())
-  {
-    Log << LOG_DESTRUCTION << LOG_GUN;
-    Log << std::string("GameOver\n");
-    std::cout << "GameOver" << std::endl;
-  }
-
-  for (const auto & alien : m_alien)
-    if (!alien->GetIsActive())
+    for (const auto & alien : m_alien)
+    {
+      if (!alien->GetIsActive())
       Log << LOG_DESTRUCTION << LOG_ALIEN;
+    }
 
-  for (const auto & obstacle : m_obstacle)
-    if (!obstacle->GetIsActive())
-      Log << LOG_DESTRUCTION << LOG_OBSTACLE;
+    for (const auto & obstacle : m_obstacle)
+      if (!obstacle->GetIsActive())
+        Log << LOG_DESTRUCTION << LOG_OBSTACLE;
 
-  m_bullet.erase(std::remove_if(m_bullet.begin(), m_bullet.end(),
-                                [](std::shared_ptr<Bullet> element) -> bool { return !element->GetIsActive(); }
-                 ), m_bullet.end()
-      );
+    m_bullet.erase(std::remove_if(m_bullet.begin(), m_bullet.end(),
+                                  [](std::shared_ptr<Bullet> element) -> bool { return !element->GetIsActive(); }
+                   ), m_bullet.end()
+        );
 
-  m_alien.erase(std::remove_if(m_alien.begin(), m_alien.end(),
-                                [](std::shared_ptr<Alien> element) -> bool { return !element->GetIsActive(); }
-                 ), m_alien.end()
-      );
+    m_alien.erase(std::remove_if(m_alien.begin(), m_alien.end(),
+                                  [](std::shared_ptr<Alien> element) -> bool { return !element->GetIsActive(); }
+                   ), m_alien.end()
+        );
 
-  m_obstacle.erase(std::remove_if(m_obstacle.begin(), m_obstacle.end(),
-                                [](std::shared_ptr<Obstacle> element) -> bool { return !element->GetIsActive(); }
-                 ), m_obstacle.end()
-      );
+    m_obstacle.erase(std::remove_if(m_obstacle.begin(), m_obstacle.end(),
+                                  [](std::shared_ptr<Obstacle> element) -> bool { return !element->GetIsActive(); }
+                   ), m_obstacle.end()
+        );
 
-  if (m_directions[kLeftDirection] && (m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds > (m_gun->GetSize().width() / 2.0f + 1)))
-    m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));
-  if (m_directions[kRightDirection] && (m_gun->GetPosition().x() + m_gun->GetSpeed() * elapsedSeconds < (m_width - m_gun->GetSize().width() / 2.0f - 1)))
-    m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() + m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));
+    if (m_directions[kLeftDirection] && (m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds > (m_gun->GetSize().width() / 2.0f + 1)))
+      m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() - m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));
+    if (m_directions[kRightDirection] && (m_gun->GetPosition().x() + m_gun->GetSpeed() * elapsedSeconds < (m_width - m_gun->GetSize().width() / 2.0f - 1)))
+      m_gun->SetPosition(QVector2D(m_gun->GetPosition().x() + m_gun->GetSpeed() * elapsedSeconds, m_gun->GetPosition().y()));
+  }
+
+  else
+  {
+    m_gameIsActive = false;
+    if (!m_gun->GetIsActive() || m_gun->GetAmmo() == 0)
+    {
+      Log << LOG_DESTRUCTION << LOG_GUN;
+      Log << std::string("GameOver\n");
+      m_status = Status::Lose;
+    }
+    else
+    {
+      Log << std::string("You Win\n");
+      Log << std::string("GameOver\n");
+      m_status = Status::Win;
+    }
+  }
 }
 
 void GLWidget::Render()

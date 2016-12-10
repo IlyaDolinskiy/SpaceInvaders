@@ -10,6 +10,8 @@
 #include <vector>
 #include <memory>
 
+enum class Status { Win, Lose };
+
 class Space
 {
 public:
@@ -24,12 +26,14 @@ protected:
   int m_amountAlien = 5;
   int m_amountObstacle = 3;
 
+  bool m_gameIsActive = true;
+  Status m_status = Status::Lose;
+
   std::shared_ptr<Gun> m_gun;
   std::vector<std::shared_ptr<Alien>> m_alien;
   std::vector<std::shared_ptr<Bullet>> m_bullet;
   std::vector<std::shared_ptr<Obstacle>> m_obstacle;
 };
-
 
 #include <ctime>
 
