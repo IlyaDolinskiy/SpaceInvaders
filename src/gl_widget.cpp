@@ -55,7 +55,6 @@ void GLWidget::initializeGL()
 
   m_time.start();
   m_timeShot.start();
-  m_timeMove.start();
 }
 
 void GLWidget::paintGL()
@@ -164,7 +163,6 @@ void GLWidget::Update(float elapsedSeconds)
       {
         alien->Move(elapsedSeconds);
       }
-      m_timeMove.restart();
     }
 
 
